@@ -3,12 +3,15 @@ package com.udacity.jdnd.course3.critter.Controller;
 import com.udacity.jdnd.course3.critter.Entity.Employee;
 import com.udacity.jdnd.course3.critter.Entity.Pet;
 import com.udacity.jdnd.course3.critter.Entity.Schedule;
+import com.udacity.jdnd.course3.critter.Repository.EmployeeRepository;
+import com.udacity.jdnd.course3.critter.Repository.PetRepository;
 import com.udacity.jdnd.course3.critter.Service.ScheduleService;
 import com.udacity.jdnd.course3.critter.DTO.ScheduleDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,16 +20,27 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/schedule")
+@Transactional
 public class ScheduleController {
 
     @Autowired
     ScheduleService scheduleService;
+
+    @Autowired
+    EmployeeRepository employeeRepository;
+
+    @Autowired
+    PetRepository petRepository;
 
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
         Schedule schedule = new Schedule();
         schedule.setLocalDate(scheduleDTO.getDate());
         schedule.setActivities(scheduleDTO.getActivities());
+        List<Employee> employees = employeeRepository.findAllById(scheduleDTO.getEmployeeIds());
+        schedule.setEmployees(employees);
+        List<Pet> pets = petRepository.findAllById(scheduleDTO.getPetIds());
+        schedule.setPets(pets);
         return convertToScheduleDTO(scheduleService.save(schedule));
     }
 
