@@ -3,8 +3,10 @@ package com.udacity.jdnd.course3.critter.Controller;
 import com.udacity.jdnd.course3.critter.Entity.Employee;
 import com.udacity.jdnd.course3.critter.Entity.Pet;
 import com.udacity.jdnd.course3.critter.Entity.Schedule;
+import com.udacity.jdnd.course3.critter.Repository.CustomerRepository;
 import com.udacity.jdnd.course3.critter.Repository.EmployeeRepository;
 import com.udacity.jdnd.course3.critter.Repository.PetRepository;
+import com.udacity.jdnd.course3.critter.Service.CustomerService;
 import com.udacity.jdnd.course3.critter.Service.ScheduleService;
 import com.udacity.jdnd.course3.critter.DTO.ScheduleDTO;
 import org.springframework.beans.BeanUtils;
@@ -32,10 +34,16 @@ public class ScheduleController {
     @Autowired
     PetRepository petRepository;
 
+    @Autowired
+    CustomerRepository customerRepository;
+
+    @Autowired
+    CustomerService customerService;
+
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
         Schedule schedule = new Schedule();
-        schedule.setLocalDate(scheduleDTO.getDate());
+        schedule.setDate(scheduleDTO.getDate());
         schedule.setActivities(scheduleDTO.getActivities());
         List<Employee> employees = employeeRepository.findAllById(scheduleDTO.getEmployeeIds());
         schedule.setEmployees(employees);
@@ -66,6 +74,7 @@ public class ScheduleController {
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
         List<Schedule> schedules = scheduleService.findScheduleForCustomer(customerId);
         return schedules.stream().map(this::convertToScheduleDTO).collect(Collectors.toList());
+
     }
 
     private ScheduleDTO convertToScheduleDTO(Schedule schedule) {

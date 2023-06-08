@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.Service;
 
+import com.udacity.jdnd.course3.critter.DTO.ScheduleDTO;
 import com.udacity.jdnd.course3.critter.Entity.Customer;
 import com.udacity.jdnd.course3.critter.Entity.Employee;
 import com.udacity.jdnd.course3.critter.Entity.Pet;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,7 +51,12 @@ public class ScheduleService {
     }
 
     public List<Schedule> findScheduleForCustomer(Long customerId) {
+        List<Schedule> schedules = new ArrayList<>();
         Customer customer = customerRepository.getOne(customerId);
-        return scheduleRepository.findByPetsIn(customer.getPets());
+        List<Pet> pets = customer.getPets();
+        for (Pet pet : pets) {
+            schedules.addAll(findScheduleForPet(pet.getId()));
+        }
+        return schedules;
     }
 }

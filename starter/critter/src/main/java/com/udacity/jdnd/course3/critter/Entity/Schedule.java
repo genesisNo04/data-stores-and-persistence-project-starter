@@ -2,7 +2,6 @@ package com.udacity.jdnd.course3.critter.Entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +28,7 @@ public class Schedule {
     )
     private List<Pet> pets;
 
-    private LocalDate localDate;
+    private LocalDate date;
 
     @ElementCollection
     @JoinTable(name="schedule_activities")
@@ -39,7 +38,7 @@ public class Schedule {
     }
 
     public Schedule(LocalDate date, Set<EmployeeSkill> activities) {
-        this.localDate = date;
+        this.date = date;
         this.activities = activities;
     }
 
@@ -67,12 +66,12 @@ public class Schedule {
         this.pets = pets;
     }
 
-    public LocalDate getLocalDate() {
-        return localDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setLocalDate(LocalDate localDate) {
-        this.localDate = localDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Set<EmployeeSkill> getActivities() {
