@@ -27,7 +27,7 @@ public class ScheduleController {
         Schedule schedule = new Schedule();
         schedule.setLocalDate(scheduleDTO.getDate());
         schedule.setActivities(scheduleDTO.getActivities());
-        return convertToScheduleDTO(schedule);
+        return convertToScheduleDTO(scheduleService.save(schedule));
     }
 
     @GetMapping
